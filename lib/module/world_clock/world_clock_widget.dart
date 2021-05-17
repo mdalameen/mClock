@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mclock/common/app_colors.dart';
 import 'package:mclock/components/analog_clock.dart';
+import 'package:mclock/components/digital_clock.dart';
+import 'package:mclock/components/mclock.dart';
 import 'package:mclock/injector.dart';
 import 'package:mclock/module/world_clock/world_clock_viewmodel.dart';
 import 'package:timezone/timezone.dart';
@@ -22,13 +24,12 @@ abstract class WorldClockWidget {
               child: SizedBox(
                 width: 280,
                 height: 280,
-                child: AnalogClock(DateTime.now().timeZoneOffset.inMilliseconds),
+                child: Mclock(DateTime.now().timeZoneOffset.inMilliseconds),
               ),
             ),
             SizedBox(
               height: 30,
             ),
-            // Text(Localizations.localeOf(context).countryCode),
             Text(vm.currentTimeZone()),
             Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
@@ -42,16 +43,17 @@ abstract class WorldClockWidget {
                     child: Container(
                       margin: EdgeInsets.all(10),
                       padding: EdgeInsets.all(gridSize / 10),
-                      // width: gridSize - gridSize / 3,
-                      // height: gridSize - gridSize / 3,
                       width: gridSize,
                       height: gridSize,
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFFDFE9F3)),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.clockOuter),
                       child: Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFFEBF0F4)),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.clockInner),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            SizedBox(
+                              height: 10,
+                            ),
                             Icon(
                               Icons.add,
                               color: Colors.black,
@@ -79,7 +81,7 @@ abstract class WorldClockWidget {
                             SizedBox(
                               width: gridSize,
                               height: gridSize,
-                              child: AnalogClock(location.currentTimeZone.offset),
+                              child: Mclock(location.currentTimeZone.offset),
                             ),
                             Text(timeZone)
                           ],

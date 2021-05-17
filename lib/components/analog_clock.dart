@@ -3,30 +3,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mclock/common/app_colors.dart';
-import 'package:mclock/components/clock_viewmodel.dart';
-import 'package:mclock/injector.dart';
 
 import 'dart:ui' as ui;
 
 class AnalogClock extends StatelessWidget {
-  final int offset;
-  AnalogClock(this.offset);
+  final DateTime time;
+  final bool displaySecond;
+  AnalogClock(this.time, this.displaySecond);
 
-  final vm = inject<ClockViewmodel>();
   static final dateFomat = DateFormat.Hms();
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      builder: (_, d) {
-        var now = DateTime.now();
-        now = now.subtract(now.timeZoneOffset);
-        now = now.add(Duration(milliseconds: offset));
-        return CustomPaint(painter: _ClockPainter(now.hour, now.minute, now.second, now.hour < 12));
-        return Text(dateFomat.format(now));
-      },
-      stream: vm.stream,
-    );
-  }
+  Widget build(BuildContext context) => CustomPaint(painter: _ClockPainter(time.hour, time.minute, time.second, time.hour < 12));
 }
 
 class _ClockPainter extends CustomPainter {
@@ -37,11 +24,11 @@ class _ClockPainter extends CustomPainter {
   _ClockPainter(this.hour, this.minute, this.second, this.isAm);
 
   static final hourNumbers = <String>['12', ...List.generate(12, (index) => '${index + 1}')];
-  static final hourRoman = <String>['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
   @override
   void paint(Canvas canvas, Size size) {
+    print(hour);
     final _outerCirclePaint = Paint()
-      ..color = Color(0xFFDFE9F3)
+      ..color = AppColors.clockOuter
       ..style = PaintingStyle.fill
       ..strokeWidth = 1;
     final _outerCircleShadowPaint = Paint()
@@ -49,7 +36,7 @@ class _ClockPainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 20)
       ..strokeWidth = 1;
-    final _innerCirclePaint = Paint()..color = Color(0xFFEBF0F4);
+    final _innerCirclePaint = Paint()..color = AppColors.clockInner;
     final innerCircleShadowPaint = Paint()
       ..color = Colors.black.withAlpha(10)
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 5);
@@ -110,12 +97,14 @@ class _ClockPainter extends CustomPainter {
     canvas.restore();
 
     canvas.save();
-    _rotate(canvas, center, (360 / 60) * (hour + minute / 10));
+    print('---> hour $hour');
+
+    _rotate(canvas, center, (360 / 12) * (hour + (minute / 60)));
     canvas.drawLine(center, Offset(center.dx, center.dy - radius / 2), hourHandPainter);
     canvas.restore();
 
     canvas.save();
-    _rotate(canvas, center, (360 / 60) * (minute + second / 60));
+    _rotate(canvas, center, (360 / 60) * (minute + (second / 60)));
     canvas.drawLine(center, Offset(center.dx, center.dy - radius / 1.6), minuteHandPainter);
     canvas.restore();
 

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-// import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mclock/common/app_colors.dart';
@@ -16,7 +15,7 @@ class _AlarmPageState extends State<AlarmPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFE6EFF3),
+      color: AppColors.background,
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -31,34 +30,18 @@ class _AlarmPageState extends State<AlarmPage> {
   }
 
   onAddPressed() async {
-    // print('addPressed');
-    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    //   if (!isAllowed) {
-    //     // Insert here your friendly dialog box before call the request method
-    //     // This is very important to not harm the user experience
-    //     AwesomeNotifications().requestPermissionToSendNotifications();
-    //   } else {
-    //     AwesomeNotifications().createNotification(
-    //         content: NotificationContent(
-    //           id: 10,
-    //           channelKey: 'basic_channel',
-    //           title: 'Simple Notification',
-    //           body: 'Simple body',
-    //         ),
-    //         schedule: NotificationCalendar.fromDate(
-    //           date: DateTime.now().add(Duration(seconds: 5)),
-    //           allowWhileIdle: true,
-    //           repeats: false,
-    //         ));
-    //   }
-    // });
+    var allow = false;
     if (Platform.isIOS) {
-      final bool result = await FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>().requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
+      allow = (await FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>().requestPermissions(
+                alert: true,
+                badge: true,
+                sound: true,
+              )) ??
+          false;
     } else {
+      allow = true;
+    }
+    if (allow) {
       await FlutterLocalNotificationsPlugin().zonedSchedule(
         1,
         'scheduled title',
