@@ -21,7 +21,7 @@ class AnalogClock extends StatelessWidget {
         var now = DateTime.now();
         now = now.subtract(now.timeZoneOffset);
         now = now.add(Duration(milliseconds: offset));
-        return CustomPaint(painter: _ClockPainter(now.hour, now.minute, now.second));
+        return CustomPaint(painter: _ClockPainter(now.hour, now.minute, now.second, now.hour < 12));
         return Text(dateFomat.format(now));
       },
       stream: vm.stream,
@@ -33,7 +33,8 @@ class _ClockPainter extends CustomPainter {
   int hour;
   int minute;
   int second;
-  _ClockPainter(this.hour, this.minute, this.second);
+  bool isAm;
+  _ClockPainter(this.hour, this.minute, this.second, this.isAm);
 
   static final hourNumbers = <String>['12', ...List.generate(12, (index) => '${index + 1}')];
   static final hourRoman = <String>['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
@@ -71,18 +72,25 @@ class _ClockPainter extends CustomPainter {
       ..color = AppColors.accent
       ..strokeWidth = 1.5;
 
+    bool isLarge = size.width > 200;
+
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width < size.height ? size.width : size.height) / 2;
-    final innerCircleRadius = radius * 0.7;
+    final innerCircleRadius = radius * (isLarge ? 0.7 : 0.6);
 
     canvas.drawCircle(center, radius, _outerCircleShadowPaint);
     canvas.drawCircle(center, radius, _outerCirclePaint);
     canvas.drawCircle(center, innerCircleRadius, innerCircleShadowPaint);
     canvas.drawCircle(center, innerCircleRadius, _innerCirclePaint);
+
+    _drawText(canvas, isAm ? 'AM' : 'PM', isLarge ? 14 : 12, size.width, Offset(center.dx, center.dy + radius / (isLarge ? 2 : 3)));
+
     canvas.save();
-    final lineMargin = radius / 10;
+
+    final lineMargin = radius / (isLarge ? 10 : 5);
     final lineHeight = radius / 40;
     final stringLineHeight = radius / 20;
+
     for (int i = 0; i < 60; i++) {
       bool isStrong = i % 5 == 0;
       canvas.drawLine(
@@ -94,51 +102,25 @@ class _ClockPainter extends CustomPainter {
           isStrong ? strongIndicatorLine : indicatorLine);
 
       if (isStrong) {
-        final textStyle = TextStyle(
-          color: Colors.black,
-          fontSize: 11,
-        );
-        final textSpan = TextSpan(
-          text: hourNumbers[i ~/ 5],
-          style: textStyle,
-        );
-        final textPainter = TextPainter(
-          text: textSpan,
-          textDirection: ui.TextDirection.ltr,
-        );
-
-        textPainter.layout(
-          minWidth: 0,
-          maxWidth: size.width,
-        );
-        final offset = Offset(center.dx - textPainter.width / 2, lineMargin + stringLineHeight + 5);
-        textPainter.paint(canvas, offset);
+        _drawText(canvas, hourNumbers[i ~/ 5], 11, size.width, Offset(center.dx, lineMargin + stringLineHeight + 5));
       }
 
-      canvas.translate(center.dx, center.dy);
-      canvas.rotate(_getRadian(360 / 60));
-      canvas.translate(-center.dx, -center.dy);
+      _rotate(canvas, center, 360 / 60);
     }
     canvas.restore();
 
     canvas.save();
-    canvas.translate(center.dx, center.dy);
-    canvas.rotate(_getRadian((360 / 60) * (hour + minute / 10)));
-    canvas.translate(-center.dx, -center.dy);
+    _rotate(canvas, center, (360 / 60) * (hour + minute / 10));
     canvas.drawLine(center, Offset(center.dx, center.dy - radius / 2), hourHandPainter);
     canvas.restore();
 
     canvas.save();
-    canvas.translate(center.dx, center.dy);
-    canvas.rotate(_getRadian((360 / 60) * (minute + second / 60)));
-    canvas.translate(-center.dx, -center.dy);
+    _rotate(canvas, center, (360 / 60) * (minute + second / 60));
     canvas.drawLine(center, Offset(center.dx, center.dy - radius / 1.6), minuteHandPainter);
     canvas.restore();
 
     canvas.save();
-    canvas.translate(center.dx, center.dy);
-    canvas.rotate(_getRadian((360 / 60) * second));
-    canvas.translate(-center.dx, -center.dy);
+    _rotate(canvas, center, (360 / 60) * second);
     canvas.drawLine(Offset(center.dx, center.dy + 10), Offset(center.dx, center.dy - radius / 1.4), secondsHandPainter);
     canvas.restore();
 
@@ -148,6 +130,34 @@ class _ClockPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
+  }
+
+  _rotate(Canvas canvas, Offset center, double degree) {
+    canvas.translate(center.dx, center.dy);
+    canvas.rotate(_getRadian(degree));
+    canvas.translate(-center.dx, -center.dy);
+  }
+
+  _drawText(Canvas canvas, String text, double fontSize, double width, Offset offset) {
+    final textStyle = TextStyle(
+      color: Colors.black,
+      fontSize: fontSize,
+    );
+    final textSpan = TextSpan(
+      text: text,
+      style: textStyle,
+    );
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: ui.TextDirection.ltr,
+    );
+
+    textPainter.layout(
+      minWidth: 0,
+      maxWidth: width,
+    );
+    final moffset = Offset(offset.dx - textPainter.width / 2, offset.dy);
+    textPainter.paint(canvas, moffset);
   }
 
   double _getRadian(double degree) => degree * pi / 180;
