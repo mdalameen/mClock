@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mclock/injector.dart';
 import 'module/home/home_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupInjection();
   runApp(MyApp());
 }
 
