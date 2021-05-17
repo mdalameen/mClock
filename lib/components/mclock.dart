@@ -18,7 +18,7 @@ class Mclock extends StatelessWidget {
         var now = DateTime.now();
         now = now.subtract(now.timeZoneOffset);
         now = now.add(Duration(milliseconds: offset));
-        return vm.isAnalog ? AnalogClock(now, true) : DigitalClock(now);
+        return vm.isAnalog ? AnalogClock(now, true) : DigitalClock(now, true);
       },
       stream: vm.stream,
     );

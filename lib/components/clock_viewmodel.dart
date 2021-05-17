@@ -5,6 +5,7 @@ import 'package:mclock/common/base_viewmodel.dart';
 class ClockViewmodel extends BaseViewmodel {
   bool _isAnalog = true;
   bool _analogDisplayNumber = false;
+  bool _displayAmPm = true;
 
   Timer _timer;
   ClockViewmodel() : super() {
@@ -30,6 +31,13 @@ class ClockViewmodel extends BaseViewmodel {
 
   set analogDisplayNumber(bool isAnalogDisplayNumber) {
     _analogDisplayNumber = isAnalogDisplayNumber;
+    updateState();
+  }
+
+  bool get isDisplayAMPm => _displayAmPm;
+
+  set displayAmPm(bool displayAmPm) {
+    _displayAmPm = displayAmPm;
     updateState();
   }
 }

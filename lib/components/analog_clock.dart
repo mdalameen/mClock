@@ -3,25 +3,42 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mclock/common/app_colors.dart';
+import 'package:mclock/components/clock_viewmodel.dart';
 
 import 'dart:ui' as ui;
+
+import 'package:mclock/injector.dart';
 
 class AnalogClock extends StatelessWidget {
   final DateTime time;
   final bool displaySecond;
-  AnalogClock(this.time, this.displaySecond);
+
+  AnalogClock(
+    this.time,
+    this.displaySecond,
+  );
 
   static final dateFomat = DateFormat.Hms();
   @override
-  Widget build(BuildContext context) => CustomPaint(painter: _ClockPainter(time.hour, time.minute, time.second, time.hour < 12));
+  Widget build(BuildContext context) => CustomPaint(
+          painter: _ClockPainter(
+        time.hour,
+        time.minute,
+        time.second,
+        time.hour < 12,
+        displaySecond,
+      ));
 }
 
 class _ClockPainter extends CustomPainter {
+  final vm = inject<ClockViewmodel>();
   int hour;
   int minute;
   int second;
   bool isAm;
-  _ClockPainter(this.hour, this.minute, this.second, this.isAm);
+  bool displaySecond;
+
+  _ClockPainter(this.hour, this.minute, this.second, this.isAm, this.displaySecond);
 
   static final hourNumbers = <String>['12', ...List.generate(12, (index) => '${index + 1}')];
   @override
@@ -69,8 +86,17 @@ class _ClockPainter extends CustomPainter {
     canvas.drawCircle(center, radius, _outerCirclePaint);
     canvas.drawCircle(center, innerCircleRadius, innerCircleShadowPaint);
     canvas.drawCircle(center, innerCircleRadius, _innerCirclePaint);
-
-    _drawText(canvas, isAm ? 'AM' : 'PM', isLarge ? 14 : 12, size.width, Offset(center.dx, center.dy + radius / (isLarge ? 2 : 3)));
+    if (vm.isDisplayAMPm)
+      _drawText(
+        canvas,
+        isAm ? 'AM' : 'PM',
+        isLarge ? 14 : 12,
+        size.width,
+        Offset(
+          center.dx,
+          center.dy + radius / (isLarge ? 2 : 3),
+        ),
+      );
 
     canvas.save();
 
@@ -88,7 +114,7 @@ class _ClockPainter extends CustomPainter {
           Offset(center.dx, lineMargin + (isStrong ? stringLineHeight : lineHeight)),
           isStrong ? strongIndicatorLine : indicatorLine);
 
-      if (isStrong) {
+      if (isStrong && vm.isAnalogDisplayNumber) {
         _drawText(canvas, hourNumbers[i ~/ 5], 11, size.width, Offset(center.dx, lineMargin + stringLineHeight + 5));
       }
 
@@ -97,7 +123,6 @@ class _ClockPainter extends CustomPainter {
     canvas.restore();
 
     canvas.save();
-    print('---> hour $hour');
 
     _rotate(canvas, center, (360 / 12) * (hour + (minute / 60)));
     canvas.drawLine(center, Offset(center.dx, center.dy - radius / 2), hourHandPainter);
@@ -107,11 +132,12 @@ class _ClockPainter extends CustomPainter {
     _rotate(canvas, center, (360 / 60) * (minute + (second / 60)));
     canvas.drawLine(center, Offset(center.dx, center.dy - radius / 1.6), minuteHandPainter);
     canvas.restore();
-
-    canvas.save();
-    _rotate(canvas, center, (360 / 60) * second);
-    canvas.drawLine(Offset(center.dx, center.dy + 10), Offset(center.dx, center.dy - radius / 1.4), secondsHandPainter);
-    canvas.restore();
+    if (displaySecond) {
+      canvas.save();
+      _rotate(canvas, center, (360 / 60) * second);
+      canvas.drawLine(Offset(center.dx, center.dy + 10), Offset(center.dx, center.dy - radius / 1.4), secondsHandPainter);
+      canvas.restore();
+    }
 
     canvas.drawCircle(center, radius / 30, secondsHandPainter);
   }

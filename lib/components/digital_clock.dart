@@ -7,7 +7,8 @@ import '../injector.dart';
 
 class DigitalClock extends StatelessWidget {
   final DateTime time;
-  DigitalClock(this.time);
+  final bool animate;
+  DigitalClock(this.time, this.animate);
 
   final vm = inject<ClockViewmodel>();
   static final hour = DateFormat('hh');
@@ -18,7 +19,6 @@ class DigitalClock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, constraints) {
-      print('digital ${constraints.maxWidth}');
       double width = constraints.maxWidth;
       final digitalStyle = TextStyle(fontFamily: 'digital', fontSize: width * 0.3);
       final tinyDigitalStyle = TextStyle(fontFamily: 'digital', fontSize: width * 0.15);
@@ -48,7 +48,12 @@ class DigitalClock extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _timeText(hour.format(time), digitalStyle),
-                    Text(':', style: TextStyle(fontFamily: 'digital2', fontSize: width * 0.3)),
+                    Text(':',
+                        style: TextStyle(
+                          fontFamily: 'digital2',
+                          fontSize: width * 0.3,
+                          color: animate ? (time.millisecond < 500 ? Colors.black : Colors.grey.shade300) : Colors.black,
+                        )),
                     _timeText(minute.format(time), digitalStyle),
                   ],
                 ),
@@ -57,7 +62,10 @@ class DigitalClock extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _timeText(seconds.format(time), tinyDigitalStyle),
-                    _timeText(aa.format(time), tinyDigitalStyle),
+                    Opacity(
+                      opacity: vm.isDisplayAMPm ? 1 : 0,
+                      child: _timeText(aa.format(time), tinyDigitalStyle),
+                    ),
                   ],
                 )
               ],
