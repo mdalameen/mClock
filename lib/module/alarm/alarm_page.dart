@@ -16,7 +16,7 @@ class _AlarmPageState extends State<AlarmPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.grey,
+      color: Color(0xFFE6EFF3),
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
