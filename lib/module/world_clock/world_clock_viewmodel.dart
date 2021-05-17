@@ -19,4 +19,13 @@ class WorldClockViewmodel extends BaseViewmodel {
     addedTimezones.add(selectedLocation.timeZone);
     updateState();
   }
+
+  removeTimezone(String timezone) {
+    addedTimezones.remove(timezone);
+    updateState();
+  }
+
+  // String currentTimeZone() => tz.getLocation(DateTime.now().timeZoneName).name;
+  String currentTimeZone() => DateTime.now().timeZoneName;
+  // String currentTimeZone() => tz.timeZoneDatabase.;
 }

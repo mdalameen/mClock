@@ -2,6 +2,7 @@
 import 'package:bottom_bar_page_transition/bottom_bar_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mclock/common/app_colors.dart';
 import 'package:mclock/module/alarm/alarm_page.dart';
 import 'package:mclock/module/home/home_widget.dart';
 import 'package:mclock/module/settings/settings_page.dart';
@@ -24,18 +25,6 @@ class _HomePageState extends State<HomePage> with HomeWidget {
   }
 
   init() async {
-    // AwesomeNotifications().initialize(
-    //     // set the icon to null if you want to use the default app icon
-    //     'resource://drawable/app_icon',
-    //     [
-    //       NotificationChannel(
-    //           channelKey: 'basic_channel',
-    //           channelName: 'Basic notifications',
-    //           channelDescription: 'Notification channel for basic tests',
-    //           defaultColor: Color(0xFF9D50DD),
-    //           ledColor: Colors.white)
-    //     ]);
-
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
@@ -85,6 +74,7 @@ class _HomePageState extends State<HomePage> with HomeWidget {
     return StreamBuilder(
         stream: vm.stream,
         builder: (_, d) => Scaffold(
+              backgroundColor: AppColors.white,
               body: BottomBarPageTransition(
                 builder: (_, i) => i == PageType.clock.index
                     ? WorldClockPage()

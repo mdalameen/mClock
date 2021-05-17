@@ -85,8 +85,6 @@ class _ClockPainter extends CustomPainter {
     final stringLineHeight = radius / 20;
     for (int i = 0; i < 60; i++) {
       bool isStrong = i % 5 == 0;
-      // print('$i is $isStrong');
-      // if (i == 5)
       canvas.drawLine(
           Offset(
             center.dx,
@@ -143,6 +141,8 @@ class _ClockPainter extends CustomPainter {
     canvas.translate(-center.dx, -center.dy);
     canvas.drawLine(Offset(center.dx, center.dy + 10), Offset(center.dx, center.dy - radius / 1.4), secondsHandPainter);
     canvas.restore();
+
+    canvas.drawCircle(center, radius / 30, secondsHandPainter);
   }
 
   @override
