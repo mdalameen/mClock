@@ -15,10 +15,12 @@ class AlarmViewmodel extends BaseViewmodel {
   addAlarm(AlarmItem item) {
     alarms.add(item);
     updateState();
+    AppPreferences.setAlarms(alarms);
   }
 
   removeAlarm(AlarmItem item) {
     alarms.remove(item);
     updateState();
+    AppPreferences.setAlarms(alarms);
   }
 }

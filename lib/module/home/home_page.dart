@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> with HomeWidget {
     return StreamBuilder(
         stream: vm.stream,
         builder: (_, d) => Scaffold(
-              backgroundColor: AppColors.white,
+              backgroundColor: AppColors.background,
               body: BottomBarPageTransition(
                 builder: (_, i) => i == PageType.clock.index
                     ? WorldClockPage()

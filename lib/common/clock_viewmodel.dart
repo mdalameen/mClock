@@ -34,6 +34,7 @@ class ClockViewmodel extends BaseViewmodel {
   set analog(bool isAnalog) {
     _isAnalog = isAnalog;
     updateState();
+    AppPreferences.setAnalog(isAnalog);
   }
 
   bool get isAnalogDisplayNumber => _analogDisplayNumber;
@@ -41,6 +42,7 @@ class ClockViewmodel extends BaseViewmodel {
   set analogDisplayNumber(bool isAnalogDisplayNumber) {
     _analogDisplayNumber = isAnalogDisplayNumber;
     updateState();
+    AppPreferences.setDisplayNumber(isAnalogDisplayNumber);
   }
 
   bool get isDisplayAMPm => _displayAmPm;
@@ -48,5 +50,6 @@ class ClockViewmodel extends BaseViewmodel {
   set displayAmPm(bool displayAmPm) {
     _displayAmPm = displayAmPm;
     updateState();
+    AppPreferences.setDisplayAmPm(displayAmPm);
   }
 }

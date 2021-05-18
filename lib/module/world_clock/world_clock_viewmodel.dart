@@ -21,11 +21,13 @@ class WorldClockViewmodel extends BaseViewmodel {
   addWorldClock(SelectTimezoneOut selectedLocation) {
     addedTimezones.add(selectedLocation.timeZone);
     updateState();
+    AppPreferences.setAddedTimeZones(addedTimezones);
   }
 
   removeTimezone(String timezone) {
     addedTimezones.remove(timezone);
     updateState();
+    AppPreferences.setAddedTimeZones(addedTimezones);
   }
 
   // String currentTimeZone() => tz.getLocation(DateTime.now().timeZoneName).name;

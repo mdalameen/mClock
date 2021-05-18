@@ -27,11 +27,12 @@ class AppPreferences {
 
   static Future<List<String>> getAddedTimeZones() async {
     final pref = await _getPref();
-    if (pref.containsKey(_keyTimeZone)) pref.getStringList(_keyTimeZone);
+    if (pref.containsKey(_keyTimeZone)) return pref.getStringList(_keyTimeZone);
     return <String>[];
   }
 
   static Future<bool> setAddedTimeZones(List<String> list) async {
+    print('setting timeaone $list');
     final pref = await _getPref();
     if (list.isEmpty) {
       return pref.remove(_keyTimeZone);

@@ -11,7 +11,7 @@ abstract class WorldClockWidget {
   buildContent(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        color: AppColors.white,
+        color: AppColors.background,
         child: Column(
           children: [
             SafeArea(
