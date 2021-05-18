@@ -34,7 +34,7 @@ dependencies:
   flutter_local_notifications: ^5.0.0+4
   intl: ^0.17.0
   bottom_bar_page_transition: ^2.0.0
-  # awesome_notifications: ^0.0.6+5
+  shared_preferences: ^2.0.5
 
 
 dev_dependencies:

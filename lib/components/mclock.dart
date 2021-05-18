@@ -24,3 +24,18 @@ class Mclock extends StatelessWidget {
     );
   }
 }
+
+class MDisplayClock extends StatelessWidget {
+  final vm = inject<ClockViewmodel>();
+  final DateTime time;
+  MDisplayClock(this.time);
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      builder: (_, d) {
+        return vm.isAnalog ? AnalogClock(time, false) : DigitalClock(time, false);
+      },
+      stream: vm.stream,
+    );
+  }
+}

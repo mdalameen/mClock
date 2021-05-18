@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:mclock/common/app_colors.dart';
+import 'package:mclock/common/model.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+import 'alarm_widget.dart';
 
 class AlarmPage extends StatefulWidget {
   AlarmPage({GlobalKey key}) : super(key: key);
@@ -11,25 +13,26 @@ class AlarmPage extends StatefulWidget {
   _AlarmPageState createState() => _AlarmPageState();
 }
 
-class _AlarmPageState extends State<AlarmPage> {
+class _AlarmPageState extends State<AlarmPage> with AlarmWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.background,
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text('Alarms'),
-            actions: [
-              IconButton(icon: Icon(Icons.add), onPressed: onAddPressed),
-            ],
-          ),
-        ],
-      ),
-    );
+    return buildContent(context);
+  }
+
+  removeAlarm(AlarmItem alarm) async {
+    await FlutterLocalNotificationsPlugin().cancel(alarm.id);
+    vm.removeAlarm(alarm);
   }
 
   onAddPressed() async {
+    DateTime date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(Duration(days: 300)));
+    if (date == null) return;
+    final now = DateTime.now();
+    bool isSameDay = date.day == now.day && date.month == now.month;
+    TimeOfDay time = await showTimePicker(context: context, initialTime: isSameDay ? TimeOfDay.now() : TimeOfDay(hour: 0, minute: 0));
+    if (time == null) return;
+    DateTime t = date.add(Duration(hours: time.hour, minutes: time.minute));
+
     var allow = false;
     if (Platform.isIOS) {
       allow = (await FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>().requestPermissions(
@@ -51,6 +54,7 @@ class _AlarmPageState extends State<AlarmPage> {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       );
+      vm.addAlarm(AlarmItem(vm.alarms.length, t));
     }
   }
 }
