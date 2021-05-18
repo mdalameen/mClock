@@ -34,16 +34,9 @@ class _HomePageState extends State<HomePage> with HomeWidget {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: selectNotification);
   }
 
-  Future selectNotification(String payload) async {
-    print('onSelected $payload .');
-    // if (payload != null) {
-    //   debugPrint('notification payload: $payload');
-    // }
-    // print('tapped');
-  }
+  Future selectNotification(String payload) async {}
 
   Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
-    print('onNotificationReceived');
     // display a dialog with the notification details, tap ok to go to another page
     // showDialog(
     //   context: context,

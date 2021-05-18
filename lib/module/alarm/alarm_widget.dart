@@ -18,20 +18,26 @@ abstract class AlarmWidget {
                   slivers: [
                     SliverAppBar(
                       title: Text('Alarms'),
+                      primary: true,
+                      centerTitle: true,
+                      floating: true,
+                      snap: true,
                     ),
-                    SliverFillRemaining(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          child: ClockWrapperWidget(
-                              onAddPressed,
-                              List.generate(vm.alarms.length, (index) {
-                                final alarm = vm.alarms[index];
-                                return WrapContent(
-                                  () => removeAlarm(alarm),
-                                  MDisplayClock(alarm.time),
-                                  DateFormat('dd/MMM/yy hh:mm:aa').format(alarm.time),
-                                );
-                              })),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        child: Column(
+                          children: [
+                            ClockWrapperWidget(
+                                onAddPressed,
+                                List.generate(vm.alarms.length, (index) {
+                                  final alarm = vm.alarms[index];
+                                  return WrapContent(
+                                    () => removeAlarm(alarm),
+                                    MDisplayClock(alarm.time),
+                                    DateFormat('dd/MMM/yy hh:mm:aa').format(alarm.time),
+                                  );
+                                })),
+                          ],
                         ),
                       ),
                     )

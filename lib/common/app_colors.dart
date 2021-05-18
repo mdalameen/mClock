@@ -8,5 +8,5 @@ class AppColors {
   static const clockOuter = Color(0xFFDFE9F3);
   static const clockInner = Color(0xFFEBF0F4);
 
-  static const background = Color(0xFFEDF1F3);
+  static const background = Color(0xFFF6FAFB);
 }

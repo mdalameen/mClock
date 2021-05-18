@@ -20,6 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
             title: Text('Settings'),
             primary: true,
             pinned: true,
+            centerTitle: true,
           ),
           SliverFillRemaining(
             child: Container(

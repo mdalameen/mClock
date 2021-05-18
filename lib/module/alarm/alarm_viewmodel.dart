@@ -23,4 +23,17 @@ class AlarmViewmodel extends BaseViewmodel {
     updateState();
     AppPreferences.setAlarms(alarms);
   }
+
+  checkRemoveOldAlarms() {
+    List<AlarmItem> toRemove = [];
+    final now = DateTime.now();
+    for (var v in alarms) {
+      if (v.time.isBefore(now)) toRemove.add(v);
+    }
+    if (toRemove.isNotEmpty) {
+      for (var v in toRemove) {
+        removeAlarm(v);
+      }
+    }
+  }
 }

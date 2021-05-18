@@ -43,7 +43,6 @@ class _ClockPainter extends CustomPainter {
   static final hourNumbers = <String>['12', ...List.generate(12, (index) => '${index + 1}')];
   @override
   void paint(Canvas canvas, Size size) {
-    print(hour);
     final _outerCirclePaint = Paint()
       ..color = AppColors.clockOuter
       ..style = PaintingStyle.fill

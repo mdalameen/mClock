@@ -11,8 +11,6 @@ class ClockWrapperWidget extends StatelessWidget {
     double gridSize = (MediaQuery.of(context).size.width - 30) / 2;
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      runAlignment: WrapAlignment.center,
-      alignment: WrapAlignment.center,
       children: [
         InkWell(
           onTap: onAddPressed,
@@ -69,6 +67,7 @@ class ClockWrapperWidget extends StatelessWidget {
                         right: 0,
                         child: PopupMenuButton<String>(
                           enabled: true,
+                          icon: Icon(Icons.more_vert),
                           onSelected: (_) => children[index].onTapped(),
                           itemBuilder: (_) => <PopupMenuItem<String>>[
                             PopupMenuItem(
