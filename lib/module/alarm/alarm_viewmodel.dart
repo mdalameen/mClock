@@ -4,12 +4,15 @@ import 'package:mclock/common/model.dart';
 
 class AlarmViewmodel extends BaseViewmodel {
   List<AlarmItem> alarms = [];
+
   AlarmViewmodel() {
     _loadData();
   }
 
   _loadData() async {
     alarms.addAll(await AppPreferences.getAlarms());
+
+    updateState();
   }
 
   addAlarm(AlarmItem item) {

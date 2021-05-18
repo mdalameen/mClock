@@ -29,9 +29,21 @@ class _AlarmPageState extends State<AlarmPage> with AlarmWidget {
     if (date == null) return;
     final now = DateTime.now();
     bool isSameDay = date.day == now.day && date.month == now.month;
-    TimeOfDay time = await showTimePicker(context: context, initialTime: isSameDay ? TimeOfDay.now() : TimeOfDay(hour: 0, minute: 0));
+    TimeOfDay time = await showTimePicker(context: context, initialTime: isSameDay ? TimeOfDay.now() : TimeOfDay(hour: 8, minute: 0));
     if (time == null) return;
+
     DateTime t = date.add(Duration(hours: time.hour, minutes: time.minute));
+
+    if (t.isBefore(DateTime.now())) {
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text('Error'),
+                content: Text('Alarm date must be future date'),
+                actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('Ok'))],
+              ));
+      return;
+    }
 
     var allow = false;
     if (Platform.isIOS) {
@@ -49,7 +61,7 @@ class _AlarmPageState extends State<AlarmPage> with AlarmWidget {
         1,
         'MClock',
         'Alarm',
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        tz.TZDateTime.from(t.toUtc(), tz.local),
         const NotificationDetails(android: AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description')),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
