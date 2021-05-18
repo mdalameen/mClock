@@ -3,7 +3,7 @@ import 'package:mclock/common/app_colors.dart';
 
 class ClockWrapperWidget extends StatelessWidget {
   final VoidCallback onAddPressed;
-  List<WrapContent> children;
+  final List<WrapContent> children;
   ClockWrapperWidget(this.onAddPressed, this.children);
 
   @override
