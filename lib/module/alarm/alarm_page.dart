@@ -47,8 +47,8 @@ class _AlarmPageState extends State<AlarmPage> with AlarmWidget {
     if (allow) {
       await FlutterLocalNotificationsPlugin().zonedSchedule(
         1,
-        'scheduled title',
-        'scheduled body',
+        'MClock',
+        'Alarm',
         tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
         const NotificationDetails(android: AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description')),
         androidAllowWhileIdle: true,

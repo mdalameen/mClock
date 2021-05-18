@@ -25,6 +25,7 @@ class AlarmViewmodel extends BaseViewmodel {
   }
 
   checkRemoveOldAlarms() {
+    if (alarms.isEmpty) return;
     List<AlarmItem> toRemove = [];
     final now = DateTime.now();
     for (var v in alarms) {

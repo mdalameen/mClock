@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:mclock/common/app_preferences.dart';
 import 'package:mclock/common/base_viewmodel.dart';
+import 'package:mclock/injector.dart';
+import 'package:mclock/module/alarm/alarm_viewmodel.dart';
 
 class ClockViewmodel extends BaseViewmodel {
   bool _isAnalog = true;
@@ -9,10 +11,16 @@ class ClockViewmodel extends BaseViewmodel {
   bool _displayAmPm = true;
 
   Timer _timer;
+  int count = 0;
   ClockViewmodel() : super() {
     _loadData();
     _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
-      updateState();
+      count++;
+      if (count > 10) {
+        final alarmVm = inject<AlarmViewmodel>();
+        alarmVm.checkRemoveOldAlarms();
+        count = 0;
+      }
     });
   }
 
