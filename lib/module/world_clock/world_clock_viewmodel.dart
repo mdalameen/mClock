@@ -30,7 +30,5 @@ class WorldClockViewmodel extends BaseViewmodel {
     AppPreferences.setAddedTimeZones(addedTimezones);
   }
 
-  // String currentTimeZone() => tz.getLocation(DateTime.now().timeZoneName).name;
   String currentTimeZone() => DateTime.now().timeZoneName;
-  // String currentTimeZone() => tz.timeZoneDatabase.;
 }

@@ -16,11 +16,36 @@ class SelectTimeZonePopup extends StatefulWidget {
 class _SelectTimeZonePopupState extends State<SelectTimeZonePopup> {
   final wcVm = inject<WorldClockViewmodel>();
   List<String> timeZones;
+  List<String> displayingTimezone = [];
+  TextEditingController controller = TextEditingController();
 
   @override
   initState() {
     super.initState();
     timeZones = wcVm.locations.keys.toList();
+    filterList();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {});
+    });
+  }
+
+  filterList() {
+    displayingTimezone.clear();
+    String text = filterText.trim();
+    if (text.isEmpty) {
+      displayingTimezone.addAll(timeZones);
+    } else {
+      for (var v in timeZones) {
+        if (v.toLowerCase().contains(text)) displayingTimezone.add(v);
+      }
+    }
+  }
+
+  String filterText = '';
+  _onTextChanged(String text) {
+    filterText = text;
+    filterList();
+    setState(() {});
   }
 
   @override
@@ -37,13 +62,44 @@ class _SelectTimeZonePopupState extends State<SelectTimeZonePopup> {
               style: TextStyle(color: Colors.black, fontSize: 16),
             )),
         SizedBox(height: 5),
+        Row(
+          children: [
+            SizedBox(
+              width: 15,
+            ),
+            Expanded(
+                child: TextField(
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Enter to search',
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  )),
+              controller: controller,
+              onChanged: _onTextChanged,
+            )),
+            if (filterText != '')
+              IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    controller.text = '';
+                    _onTextChanged('');
+                  })
+            else
+              SizedBox(
+                width: 15,
+              ),
+          ],
+        ),
         Expanded(
             child: ListView.separated(
           padding: EdgeInsets.zero,
           separatorBuilder: (_, i) => Divider(),
-          itemCount: timeZones.length,
+          itemCount: displayingTimezone.length,
           itemBuilder: (_, i) {
-            String timeZone = timeZones[i];
+            String timeZone = displayingTimezone[i];
             return ListTile(
               enabled: !wcVm.addedTimezones.contains(timeZone),
               onTap: () => Navigator.pop(context, SelectTimezoneOut(timeZone, wcVm.locations[timeZone])),
@@ -56,6 +112,12 @@ class _SelectTimeZonePopupState extends State<SelectTimeZonePopup> {
         ))
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 
