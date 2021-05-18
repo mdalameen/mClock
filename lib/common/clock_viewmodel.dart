@@ -15,6 +15,7 @@ class ClockViewmodel extends BaseViewmodel {
   ClockViewmodel() : super() {
     _loadData();
     _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      updateState();
       count++;
       if (count > 10) {
         final alarmVm = inject<AlarmViewmodel>();
