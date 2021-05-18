@@ -70,7 +70,11 @@ class _SelectTimeZonePopupState extends State<SelectTimeZonePopup> {
             Expanded(
                 child: TextField(
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: 25,
+                  ),
                   hintText: 'Enter to search',
                   isDense: true,
                   border: OutlineInputBorder(
