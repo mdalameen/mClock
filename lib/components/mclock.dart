@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mclock/common/clock_viewmodel.dart';
 import 'package:mclock/components/analog_clock.dart';
 import 'package:mclock/components/digital_clock.dart';
 
 import '../injector.dart';
-import 'clock_viewmodel.dart';
 
 class Mclock extends StatelessWidget {
   final vm = inject<ClockViewmodel>();

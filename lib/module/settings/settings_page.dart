@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mclock/common/app_colors.dart';
-import 'package:mclock/components/clock_viewmodel.dart';
+import 'package:mclock/common/clock_viewmodel.dart';
 import 'package:mclock/injector.dart';
 
 class SettingsPage extends StatefulWidget {

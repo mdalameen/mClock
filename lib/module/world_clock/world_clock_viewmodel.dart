@@ -1,3 +1,4 @@
+import 'package:mclock/common/app_preferences.dart';
 import 'package:mclock/common/base_viewmodel.dart';
 import 'package:mclock/module/world_clock/select_timezone/select_timezone_popup.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -13,6 +14,8 @@ class WorldClockViewmodel extends BaseViewmodel {
   Future<void> initTimezones() async {
     tz.initializeTimeZones();
     locations = tz.timeZoneDatabase.locations;
+    addedTimezones.addAll(await AppPreferences.getAddedTimeZones());
+    updateState();
   }
 
   addWorldClock(SelectTimezoneOut selectedLocation) {

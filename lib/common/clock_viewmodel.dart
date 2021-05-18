@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:mclock/common/app_preferences.dart';
 import 'package:mclock/common/base_viewmodel.dart';
 
 class ClockViewmodel extends BaseViewmodel {
@@ -9,9 +10,17 @@ class ClockViewmodel extends BaseViewmodel {
 
   Timer _timer;
   ClockViewmodel() : super() {
+    _loadData();
     _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
       updateState();
     });
+  }
+
+  _loadData() async {
+    _isAnalog = await AppPreferences.isAnalog();
+    _analogDisplayNumber = await AppPreferences.isDisplayNumber();
+    _displayAmPm = await AppPreferences.isDisplayAmPm();
+    updateState();
   }
 
   @override

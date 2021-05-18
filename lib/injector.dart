@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
-import 'package:mclock/components/clock_viewmodel.dart';
 import 'package:mclock/module/alarm/alarm_viewmodel.dart';
 import 'package:mclock/module/home/home_viewmodel.dart';
 import 'package:mclock/module/world_clock/world_clock_viewmodel.dart';
 
+import 'common/clock_viewmodel.dart';
 import 'module/settings/settings_viewmodel.dart';
 
 final GetIt inject = GetIt.I;

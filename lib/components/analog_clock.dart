@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mclock/common/app_colors.dart';
-import 'package:mclock/components/clock_viewmodel.dart';
+import 'package:mclock/common/clock_viewmodel.dart';
 
 import 'dart:ui' as ui;
 
